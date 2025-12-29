@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Frontend</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>Check the console!</h1>
+    <button id="getMessage">Get Message</button>
+    <button id="sendData">Send Data</button>
+
+    <script>
+        const backendURL = 'https://live-render-test.onrender.com' // Your backend URL
+
+        document.getElementById('getMessage').addEventListener('click', () => {
+            axios.get(`${backendURL}/api/message`)
+                .then(response => {
+                    console.log('GET response:', response.data)
+                })
+                .catch(error => {
+                    console.error('GET error:', error)
+                })
+        })
+
+        document.getElementById('sendData').addEventListener('click', () => {
+            axios.post(`${backendURL}/api/data`, { name: 'Shahak', age: 24 })
+                .then(response => {
+                    console.log('POST response:', response.data)
+                })
+                .catch(error => {
+                    console.error('POST error:', error)
+                })
+        })
+    </script>
+</body>
+
+</html>
