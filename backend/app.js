@@ -5,10 +5,7 @@ const app = express()
 const port = 3000
 
 // Enable CORS for all routes
-app.use(cors({
-    origin: ['http://localhost:5500', 'https://your-frontend-domain.com'],
-    credentials: true
-}))
+app.use(cors())
 
 // Parse JSON bodies
 app.use(express.json())

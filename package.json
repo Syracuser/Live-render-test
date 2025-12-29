@@ -2,8 +2,7 @@
   "dependencies": {
     "axios": "^1.13.2",
     "cors": "^2.8.5",
-    "express": "^5.2.1",
-    "nodemon": "^3.1.11"
+    "express": "^5.2.1"
   },
   "name": "live-site",
   "version": "1.0.0",
@@ -16,5 +15,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Syracuser/Live-render-test.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Syracuser/Live-render-test/issues"
+  },
+  "homepage": "https://github.com/Syracuser/Live-render-test#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
 }

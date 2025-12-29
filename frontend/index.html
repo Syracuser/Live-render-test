@@ -3,30 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Frontend</title>
+    <title>My Frontend App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .api-url {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            word-break: break-all;
+            color: #555;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        #fetchRootBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #fetchRootBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #fetchDataBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        #fetchDataBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        #clearBtn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        #clearBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #result {
+            min-height: 100px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .success {
+            padding: 15px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            color: #155724;
+        }
+
+        .error {
+            padding: 15px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            color: #721c24;
+        }
+
+        .data-display {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .data-display strong {
+            color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-    <h1>Frontend App</h1>
-    <button id="fetchBtn">Fetch Data</button>
-    <div id="result"></div>
+    <div class="container">
+        <h1>🚀 Frontend App</h1>
+        <p class="subtitle">Connected to Backend API</p>
+        
+        <div class="api-url">
+            <strong>API URL:</strong> https://live-render-test.onrender.com
+        </div>
 
-    <!-- Include Axios -->
+        <div class="button-group">
+            <button id="fetchRootBtn">Fetch Root (/)</button>
+            <button id="fetchDataBtn">Fetch API Data</button>
+            <button id="clearBtn">Clear Result</button>
+        </div>
+
+        <div id="result">
+            <div class="empty-state">Click a button to test the API connection</div>
+        </div>
+    </div>
+
+    <!-- Include Axios from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
     <script>
-        // Use your Render backend URL
+        // Your backend API URL (deployed on Render)
         const API_URL = 'https://live-render-test.onrender.com'
         
-        document.getElementById('fetchBtn').addEventListener('click', async () => {
+        const resultDiv = document.getElementById('result')
+        const fetchRootBtn = document.getElementById('fetchRootBtn')
+        const fetchDataBtn = document.getElementById('fetchDataBtn')
+        const clearBtn = document.getElementById('clearBtn')
+
+        // Function to show loading state
+        function showLoading() {
+            resultDiv.innerHTML = '<div class="loading">⏳ Loading...</div>'
+        }
+
+        // Function to show success
+        function showSuccess(content) {
+            resultDiv.innerHTML = `<div class="success">${content}</div>`
+        }
+
+        // Function to show error
+        function showError(message) {
+            resultDiv.innerHTML = `<div class="error"><strong>❌ Error:</strong> ${message}</div>`
+        }
+
+        // Fetch from root endpoint (/)
+        fetchRootBtn.addEventListener('click', async () => {
+            showLoading()
             try {
-                const response = await axios.get(`${API_URL}/api/data`)
-                document.getElementById('result').innerHTML = 
-                    `<p>${response.data.message}</p>`
+                const response = await axios.get(`${API_URL}/`)
+                showSuccess(`
+                    <strong>✅ Success!</strong>
+                    <div class="data-display">
+                        <strong>Response:</strong><br>
+                        ${response.data}
+                    </div>
+                `)
             } catch (error) {
                 console.error('Error:', error)
-                document.getElementById('result').innerHTML = 
-                    `<p>Error: ${error.message}</p>`
+                showError(error.response?.data || error.message || 'Failed to connect to server')
             }
+        })
+
+        // Fetch from /api/data endpoint
+        fetchDataBtn.addEventListener('click', async () => {
+            showLoading()
+            try {
+                const response = await axios.get(`${API_URL}/api/data`)
+                const data = response.data
+                showSuccess(`
+                    <strong>✅ Success!</strong>
+                    <div class="data-display">
+                        <strong>Message:</strong> ${data.message}<br>
+                        <strong>Timestamp:</strong> ${new Date(data.timestamp).toLocaleString()}
+                    </div>
+                `)
+            } catch (error) {
+                console.error('Error:', error)
+                showError(error.response?.data || error.message || 'Failed to connect to server')
+            }
+        })
+
+        // Clear result
+        clearBtn.addEventListener('click', () => {
+            resultDiv.innerHTML = '<div class="empty-state">Click a button to test the API connection</div>'
         })
     </script>
 </body>
