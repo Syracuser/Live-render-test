@@ -1,40 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Frontend</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Frontend</title>
 </head>
-
 <body>
-    <h1>Check the console!</h1>
-    <button id="getMessage">Get Message</button>
-    <button id="sendData">Send Data</button>
+    <h1>Frontend App</h1>
+    <button id="fetchBtn">Fetch Data</button>
+    <div id="result"></div>
 
+    <!-- Include Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
     <script>
-        const backendURL = 'https://live-render-test.onrender.com' // Your backend URL
-
-        document.getElementById('getMessage').addEventListener('click', () => {
-            axios.get(`${backendURL}/api/message`)
-                .then(response => {
-                    console.log('GET response:', response.data)
-                })
-                .catch(error => {
-                    console.error('GET error:', error)
-                })
-        })
-
-        document.getElementById('sendData').addEventListener('click', () => {
-            axios.post(`${backendURL}/api/data`, { name: 'Shahak', age: 24 })
-                .then(response => {
-                    console.log('POST response:', response.data)
-                })
-                .catch(error => {
-                    console.error('POST error:', error)
-                })
+        // Use your Render backend URL
+        const API_URL = 'https://live-render-test.onrender.com'
+        
+        document.getElementById('fetchBtn').addEventListener('click', async () => {
+            try {
+                const response = await axios.get(`${API_URL}/api/data`)
+                document.getElementById('result').innerHTML = 
+                    `<p>${response.data.message}</p>`
+            } catch (error) {
+                console.error('Error:', error)
+                document.getElementById('result').innerHTML = 
+                    `<p>Error: ${error.message}</p>`
+            }
         })
     </script>
 </body>
-
 </html>

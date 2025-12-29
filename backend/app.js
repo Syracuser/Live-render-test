@@ -2,23 +2,24 @@ import express from 'express'
 import cors from 'cors'
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = 3000
 
-// Enable CORS for all origins (frontend can be anywhere)
-app.use(cors())
+// Enable CORS for all routes
+app.use(cors({
+    origin: ['http://localhost:5500', 'https://your-frontend-domain.com'],
+    credentials: true
+}))
 
-// Parse JSON bodies (for POST requests)
+// Parse JSON bodies
 app.use(express.json())
 
-// Example API endpoint
-app.get('/api/message', (req, res) => {
-    res.json({ message: 'Hello from backend!' })
+app.get('/', (req, res) => {
+    res.send('This is my app! nice, right?')
 })
 
-// Example POST endpoint
-app.post('/api/data', (req, res) => {
-    console.log('Received data:', req.body)
-    res.json({ status: 'success', received: req.body })
+// Example API endpoint
+app.get('/api/data', (req, res) => {
+    res.json({ message: 'Hello from the backend!', timestamp: new Date() })
 })
 
 app.listen(port, () => {
